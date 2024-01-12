@@ -50,7 +50,7 @@ export async function getAllArticlesFromCategory(req, res) {
   try {
     const params = [req.params.category_id];
     const stmnt = db.prepare(`SELECT * FROM articles where category_id = ?`);
-    const row = stmnt.get(params);
+    const rows = stmnt.all(params);
     const jsonToSend = {
       meta: {
         name: "Articles from category",
@@ -58,7 +58,10 @@ export async function getAllArticlesFromCategory(req, res) {
         date: getToday(),
         originalUrl: `${req.originalUrl}`,
       },
-      data: row
+      data: []
+    }
+    for (let i = 0; i < rows.length; i++) {
+      jsonToSend.data.push(`/responses/${rows[i].id}`)
     }
     res.status(200).json(jsonToSend);
   } catch (err) {
@@ -88,7 +91,7 @@ export async function getSingleArticle(req, res) {
 
 export async function getAllCategories(req, res) {
   try {
-    const stmnt = db.prepare("SELECT * FROM articleCategory");
+    const stmnt = db.prepare("SELECT * FROM articleCategories");
     const rows = stmnt.all();
     const jsonToSend = {
       meta: {
@@ -111,7 +114,7 @@ export async function getAllCategories(req, res) {
 export async function getSingleCategory(req, res) {
   try {
     const params = [req.params.id];
-    const stmnt = db.prepare(`SELECT * FROM articleCategory where id = ?`);
+    const stmnt = db.prepare(`SELECT * FROM articleCategories where id = ?`);
     const row = stmnt.get(params);
     const jsonToSend = {
       meta: {
