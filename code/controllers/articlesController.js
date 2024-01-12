@@ -100,7 +100,7 @@ export async function getAllCategories(req, res) {
       data: []
     }
     for (let i = 0; i < rows.length; i++) {
-      jsonToSend.data.push(`/articles/categories/${rows[i].id}`)
+      jsonToSend.data.push(`/categories/${rows[i].id}`)
     }
     res.status(200).json(jsonToSend);
   } catch (err) {
